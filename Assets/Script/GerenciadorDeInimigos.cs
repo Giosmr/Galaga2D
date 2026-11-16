@@ -2,15 +2,46 @@ using UnityEngine;
 
 public class GerenciadorDeInimigos : MonoBehaviour
 {
-    public void CriarInimigo(GameObject prefab, Vector3 posicao, Quaternion rotacao)
+    public GameObject[] prefabsInimigos;
+
+    void Start()
     {
-        if (prefab != null)
+        CriarTodos();
+    }
+
+    void Update()
+    {
+        MovimentoDosInimigos[] inimigos =
+            FindObjectsByType<MovimentoDosInimigos>(
+                FindObjectsSortMode.None
+            );
+
+        if (inimigos.Length == 0)
         {
-            Instantiate(prefab, posicao, rotacao);
+            CriarTodos();
         }
-        else
+    }
+
+    void CriarTodos()
+    {
+        for (int i = 0; i < prefabsInimigos.Length; i++)
         {
-            Debug.LogError("Prefab do inimigo não configurado!");
+            if (prefabsInimigos[i] != null)
+            {
+                Vector3 posicao = new Vector3(
+                    10f,
+                    3f - (i * 2.5f),
+                    0f
+                );
+
+                float rotacao = (i == 0) ? -90f : 90f;
+
+                Instantiate(
+                    prefabsInimigos[i],
+                    posicao,
+                    Quaternion.Euler(0f, 0f, rotacao)
+                );
+            }
         }
     }
 }

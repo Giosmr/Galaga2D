@@ -5,20 +5,16 @@ public class MovimentoDosInimigos : MonoBehaviour
     public float velocidade = 2f;
     public GameObject laser;
     public float intervaloTiro = 1f;
-
     public int vidaMaxima = 10;
-    public GameObject meuPrefab;
 
     private int vidaAtual;
-    private VidaJogador vidaJogador;
 
     void Start()
     {
         vidaAtual = vidaMaxima;
-        Debug.Log("DANO RECEBIDO! VIDA: " + vidaAtual);
-        vidaJogador = FindAnyObjectByType<VidaJogador>();
 
-        InvokeRepeating(nameof(Atirar), 1f, intervaloTiro);
+        if (laser != null)
+            InvokeRepeating(nameof(Atirar), 1f, intervaloTiro);
     }
 
     void Update()
@@ -27,11 +23,6 @@ public class MovimentoDosInimigos : MonoBehaviour
 
         if (transform.position.x < -10f)
         {
-            if (vidaJogador != null)
-            {
-                vidaJogador.PerderVida();
-            }
-
             transform.position = new Vector3(
                 10f,
                 transform.position.y,
@@ -40,33 +31,18 @@ public class MovimentoDosInimigos : MonoBehaviour
         }
     }
 
-   public void ReceberDano()
-{
-    vidaAtual--;
-
-    Debug.Log("VIDA DO INIMIGO: " + vidaAtual);
-
-    if (vidaAtual <= 0)
+    public void ReceberDano()
     {
-        GerenciadorDeInimigos gerenciador =
-            FindAnyObjectByType<GerenciadorDeInimigos>();
+        vidaAtual--;
 
-        if (gerenciador != null && meuPrefab != null)
-        {
-            gerenciador.CriarInimigo(
-                meuPrefab,
-                transform.position,
-                transform.rotation
-            );
-        }
-        else
-        {
-            Debug.LogError("Gerenciador ou Meu Prefab não configurado!");
-        }
+        Debug.Log("VIDA DO INIMIGO: " + vidaAtual);
 
-        Destroy(gameObject);
+        if (vidaAtual <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
-}
+
     void Atirar()
     {
         if (laser != null)
